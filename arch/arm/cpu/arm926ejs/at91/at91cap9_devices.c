@@ -167,16 +167,16 @@ void at91_spi1_hw_init(unsigned long cs_mask)
 #ifdef CONFIG_MACB
 void at91_macb_hw_init(void)
 {
-	at91_set_a_periph(AT91_PIO_PORTB, 21, 0);	/* ETXCK_EREFCK */
-	at91_set_a_periph(AT91_PIO_PORTB, 22, 0);	/* ERXDV */
-	at91_set_a_periph(AT91_PIO_PORTB, 25, 0);	/* ERX0 */
-	at91_set_a_periph(AT91_PIO_PORTB, 26, 0);	/* ERX1 */
-	at91_set_a_periph(AT91_PIO_PORTB, 27, 0);	/* ERXER */
-	at91_set_a_periph(AT91_PIO_PORTB, 28, 0);	/* ETXEN */
-	at91_set_a_periph(AT91_PIO_PORTB, 23, 0);	/* ETX0 */
-	at91_set_a_periph(AT91_PIO_PORTB, 24, 0);	/* ETX1 */
-	at91_set_a_periph(AT91_PIO_PORTB, 30, 0);	/* EMDIO */
-	at91_set_a_periph(AT91_PIO_PORTB, 29, 0);	/* EMDC */
+	at91_set_a_periph(AT91_PIO_PORTB, 4, 0);	/* ETXCK_EREFCK */
+	at91_set_a_periph(AT91_PIO_PORTB, 3, 0);	/* ERXDV */
+	at91_set_a_periph(AT91_PIO_PORTB, 0, 0);	/* ERX0 */
+	at91_set_a_periph(AT91_PIO_PORTB, 1, 0);	/* ERX1 */
+	at91_set_a_periph(AT91_PIO_PORTB, 2, 0);	/* ERXER */
+	at91_set_a_periph(AT91_PIO_PORTB, 7, 0);	/* ETXEN */
+	at91_set_a_periph(AT91_PIO_PORTB, 9, 0);	/* ETX0 */
+	at91_set_a_periph(AT91_PIO_PORTB, 10, 0);	/* ETX1 */
+	at91_set_a_periph(AT91_PIO_PORTB, 5, 0);	/* EMDIO */
+	at91_set_a_periph(AT91_PIO_PORTB, 6, 0);	/* EMDC */
 
 #ifndef CONFIG_RMII
 	at91_set_b_periph(AT91_PIO_PORTC, 25, 0);	/* ECRS */

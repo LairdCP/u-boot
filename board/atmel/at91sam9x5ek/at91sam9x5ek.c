@@ -61,11 +61,12 @@ static void at91sam9x5ek_nand_hw_init(void)
 	/* Enable CS3 */
 	csa = readl(&matrix->ebicsa);
 	csa |= AT91_MATRIX_EBI_CS3A_SMC_SMARTMEDIA;
-	/* NAND flash on D16 */
-	csa |= AT91_MATRIX_NFD0_ON_D16;
+	/* NAND flash on D0 */
+	csa &= ~AT91_MATRIX_NFD0_ON_D16;
 
 	/* Configure IO drive */
 	csa &= ~AT91_MATRIX_EBI_EBI_IOSR_NORMAL;
+	csa &= ~AT91_MATRIX_MP_ON;
 
 	writel(csa, &matrix->ebicsa);
 
@@ -94,11 +95,14 @@ static void at91sam9x5ek_nand_hw_init(void)
 	at91_set_gpio_input(CONFIG_SYS_NAND_READY_PIN, 1);
 	/* Enable NandFlash */
 	at91_set_gpio_output(CONFIG_SYS_NAND_ENABLE_PIN, 1);
+	/* Disable Flash Write Protect Line */
+	at91_set_gpio_output(AT91_PIN_PD10, 1);
 
 	at91_set_a_periph(AT91_PIO_PORTD, 0, 1);	/* NAND OE */
 	at91_set_a_periph(AT91_PIO_PORTD, 1, 1);	/* NAND WE */
 	at91_set_a_periph(AT91_PIO_PORTD, 2, 1);	/* NAND ALE */
 	at91_set_a_periph(AT91_PIO_PORTD, 3, 1);	/* NAND CLE */
+/*
 	at91_set_a_periph(AT91_PIO_PORTD, 6, 1);
 	at91_set_a_periph(AT91_PIO_PORTD, 7, 1);
 	at91_set_a_periph(AT91_PIO_PORTD, 8, 1);
@@ -107,6 +111,7 @@ static void at91sam9x5ek_nand_hw_init(void)
 	at91_set_a_periph(AT91_PIO_PORTD, 11, 1);
 	at91_set_a_periph(AT91_PIO_PORTD, 12, 1);
 	at91_set_a_periph(AT91_PIO_PORTD, 13, 1);
+*/
 }
 #endif
 
