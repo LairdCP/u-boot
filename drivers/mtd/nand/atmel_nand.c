@@ -720,10 +720,10 @@ static int atmel_pmecc_nand_init_params(struct nand_chip *nand,
  * several NAND_CMD_RNDOUT during read
  */
 static struct nand_ecclayout atmel_oobinfo_large = {
-	.eccbytes = 4,
-	.eccpos = {60, 61, 62, 63},
+	.eccbytes = 28,
+	.eccpos = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29},
 	.oobfree = {
-		{2, 58}
+		{30, 34}
 	},
 };
 
