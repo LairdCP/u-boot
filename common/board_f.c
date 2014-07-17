@@ -104,9 +104,14 @@ __weak void blue_led_off(void) {}
  * Could the CONFIG_SPL_BUILD infection become a flag in gd?
  */
 
-#if defined(CONFIG_WATCHDOG)
+#if defined(CONFIG_WATCHDOG) || defined(CONFIG_HW_WATCHDOG)
 static int init_func_watchdog_init(void)
 {
+# if defined(CONFIG_HW_WATCHDOG) && (defined(CONFIG_BLACKFIN) || \
+	defined(CONFIG_M68K) || defined(CONFIG_MICROBLAZE) || \
+	defined(CONFIG_SH))
+	hw_watchdog_init();
+# endif
 	puts("       Watchdog enabled\n");
 	WATCHDOG_RESET();
 
@@ -144,7 +149,11 @@ static int display_text_info(void)
 	bss_end = (ulong)&__bss_end;
 
 	debug("U-Boot code: %08X -> %08lX  BSS: -> %08lX\n",
+#ifdef CONFIG_SYS_TEXT_BASE
 	      CONFIG_SYS_TEXT_BASE, bss_start, bss_end);
+#else
+	      CONFIG_SYS_MONITOR_BASE, bss_start, bss_end);
+#endif
 #endif
 
 #ifdef CONFIG_MODEM_SUPPORT
@@ -259,6 +268,8 @@ static int setup_mon_len(void)
 	gd->mon_len = (ulong)&__bss_end - (ulong)_start;
 #elif defined(CONFIG_SANDBOX)
 	gd->mon_len = (ulong)&_end - (ulong)_init;
+#elif defined(CONFIG_BLACKFIN)
+	gd->mon_len = CONFIG_SYS_MONITOR_LEN;
 #else
 	/* TODO: use (ulong)&__bss_end - (ulong)&__text_start; ? */
 	gd->mon_len = (ulong)&__bss_end - CONFIG_SYS_MONITOR_BASE;
@@ -468,8 +479,9 @@ static int reserve_trace(void)
 	return 0;
 }
 
-#if defined(CONFIG_VIDEO) && (!defined(CONFIG_PPC) || defined(CONFIG_8xx)) \
-		&& !defined(CONFIG_ARM) && !defined(CONFIG_X86)
+#if defined(CONFIG_VIDEO) && (!defined(CONFIG_PPC) || defined(CONFIG_8xx)) && \
+		!defined(CONFIG_ARM) && !defined(CONFIG_X86) && \
+		!defined(CONFIG_BLACKFIN)
 static int reserve_video(void)
 {
 	/* reserve memory for video display (always full pages) */
@@ -514,11 +526,13 @@ static int reserve_malloc(void)
 /* (permanently) allocate a Board Info struct */
 static int reserve_board(void)
 {
-	gd->start_addr_sp -= sizeof(bd_t);
-	gd->bd = (bd_t *)map_sysmem(gd->start_addr_sp, sizeof(bd_t));
-	memset(gd->bd, '\0', sizeof(bd_t));
-	debug("Reserving %zu Bytes for Board Info at: %08lx\n",
-			sizeof(bd_t), gd->start_addr_sp);
+	if (!gd->bd) {
+		gd->start_addr_sp -= sizeof(bd_t);
+		gd->bd = (bd_t *)map_sysmem(gd->start_addr_sp, sizeof(bd_t));
+		memset(gd->bd, '\0', sizeof(bd_t));
+		debug("Reserving %zu Bytes for Board Info at: %08lx\n",
+		      sizeof(bd_t), gd->start_addr_sp);
+	}
 	return 0;
 }
 #endif
@@ -719,7 +733,9 @@ static int reloc_fdt(void)
 
 static int setup_reloc(void)
 {
+#ifdef CONFIG_SYS_TEXT_BASE
 	gd->reloc_off = gd->relocaddr - CONFIG_SYS_TEXT_BASE;
+#endif
 	memcpy(gd->new_gd, (char *)gd, sizeof(gd_t));
 
 	debug("Relocation Offset is: %08lx\n", gd->reloc_off);
@@ -802,7 +818,7 @@ static init_fnc_t init_sequence_f[] = {
 	/* TODO: can we rename this to timer_init()? */
 	init_timebase,
 #endif
-#if defined(CONFIG_ARM) || defined(CONFIG_MIPS)
+#if defined(CONFIG_ARM) || defined(CONFIG_MIPS) || defined(CONFIG_BLACKFIN)
 	timer_init,		/* initialize timer */
 #endif
 #ifdef CONFIG_SYS_ALLOC_DPRAM
@@ -901,6 +917,10 @@ static init_fnc_t init_sequence_f[] = {
 	 *  - board info struct
 	 */
 	setup_dest_addr,
+#if defined(CONFIG_BLACKFIN)
+	/* Blackfin u-boot monitor should be on top of the ram */
+	reserve_uboot,
+#endif
 #if defined(CONFIG_LOGBUFFER) && !defined(CONFIG_ALT_LB_ADDR)
 	reserve_logbuffer,
 #endif
@@ -917,11 +937,14 @@ static init_fnc_t init_sequence_f[] = {
 #endif
 	reserve_trace,
 	/* TODO: Why the dependency on CONFIG_8xx? */
-#if defined(CONFIG_VIDEO) && (!defined(CONFIG_PPC) || defined(CONFIG_8xx)) \
-		&& !defined(CONFIG_ARM) && !defined(CONFIG_X86)
+#if defined(CONFIG_VIDEO) && (!defined(CONFIG_PPC) || defined(CONFIG_8xx)) && \
+		!defined(CONFIG_ARM) && !defined(CONFIG_X86) && \
+		!defined(CONFIG_BLACKFIN)
 	reserve_video,
 #endif
+#if !defined(CONFIG_BLACKFIN)
 	reserve_uboot,
+#endif
 #ifndef CONFIG_SPL_BUILD
 	reserve_malloc,
 	reserve_board,
