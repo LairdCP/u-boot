@@ -1,0 +1,263 @@
+/*
+ * Configuation settings for the SAMA5D3xEK board.
+ *
+ * Copyright (C) 2012 - 2013 Atmel
+ *
+ * based on at91sam9m10g45ek.h by:
+ * Stelian Pop <stelian@popies.net>
+ * Lead Tech Design <www.leadtechdesign.com>
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
+ */
+
+#ifndef __CONFIG_H
+#define __CONFIG_H
+
+#include <asm/hardware.h>
+
+#define CONFIG_SYS_TEXT_BASE		0x23f00000
+
+/* ARM asynchronous clock */
+#define CONFIG_SYS_AT91_SLOW_CLOCK      32768
+#define CONFIG_SYS_AT91_MAIN_CLOCK      12000000 /* from 12 MHz crystal */
+
+#define CONFIG_ARCH_CPU_INIT
+
+#define CONFIG_CMDLINE_TAG              /* enable passing of ATAGs */
+#define CONFIG_SETUP_MEMORY_TAGS
+#define CONFIG_INITRD_TAG
+
+#ifndef CONFIG_SPL_BUILD
+#define CONFIG_SKIP_LOWLEVEL_INIT
+#endif
+
+#define CONFIG_BOARD_EARLY_INIT_F
+#define CONFIG_DISPLAY_CPUINFO
+
+#define CONFIG_CMD_BOOTZ
+#define CONFIG_OF_LIBFDT		/* Device Tree support */
+
+#define CONFIG_SYS_GENERIC_BOARD
+
+#define CONFIG_BOARD_LATE_INIT
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
+#define CONFIG_IMAGE_FORMAT_LEGACY
+
+/* general purpose I/O */
+#define CONFIG_AT91_GPIO
+
+/* serial console */
+#define CONFIG_ATMEL_USART
+#define CONFIG_USART_BASE		ATMEL_BASE_DBGU
+#define	CONFIG_USART_ID			ATMEL_ID_DBGU
+
+#define CONFIG_BOOTDELAY		3
+
+/*
+ * BOOTP options
+ */
+#define CONFIG_BOOTP_BOOTFILESIZE
+#define CONFIG_BOOTP_BOOTPATH
+#define CONFIG_BOOTP_GATEWAY
+#define CONFIG_BOOTP_HOSTNAME
+
+/* No NOR flash */
+#define CONFIG_SYS_NO_FLASH
+
+/*
+ * Command line configuration.
+ */
+#include <config_cmd_default.h>
+
+#undef CONFIG_CMD_FPGA
+#undef CONFIG_CMD_IMI
+#undef CONFIG_CMD_LOADS
+#define CONFIG_CMD_PING
+#define CONFIG_CMD_DHCP
+#define CONFIG_CMD_IMI
+
+/* SDRAM */
+#define CONFIG_NR_DRAM_BANKS		1
+#define CONFIG_SYS_SDRAM_BASE           ATMEL_BASE_DDRCS
+#define CONFIG_SYS_SDRAM_SIZE		0x04000000
+
+#ifdef CONFIG_SPL_BUILD
+#define CONFIG_SYS_INIT_SP_ADDR		0x310000
+#else
+#define CONFIG_SYS_INIT_SP_ADDR \
+	(CONFIG_SYS_SDRAM_BASE + 4 * 1024 - GENERATED_GBL_DATA_SIZE)
+#endif
+
+#define CONFIG_CMD_MEMTEST
+#define CONFIG_SYS_MEMTEST_START	0x21000000
+#define CONFIG_SYS_MEMTEST_END		0x22000000
+#define CONFIG_SYS_ALT_MEMTEST
+
+/* SerialFlash */
+#undef CONFIG_CMD_SF
+
+#ifdef CONFIG_CMD_SF
+#define CONFIG_ATMEL_SPI
+#define CONFIG_SPI_FLASH
+#define CONFIG_SPI_FLASH_ATMEL
+#define CONFIG_SF_DEFAULT_SPEED		30000000
+#endif
+
+/* NAND flash */
+#define CONFIG_CMD_NAND
+
+#ifdef CONFIG_CMD_NAND
+#define CONFIG_NAND_ATMEL
+#define CONFIG_SYS_MAX_NAND_DEVICE	1
+#define CONFIG_SYS_NAND_BASE		ATMEL_BASE_CS3
+/* our ALE is AD21 */
+#define CONFIG_SYS_NAND_MASK_ALE	(1 << 21)
+/* our CLE is AD22 */
+#define CONFIG_SYS_NAND_MASK_CLE	(1 << 22)
+#define CONFIG_SYS_NAND_ONFI_DETECTION
+/* PMECC & PMERRLOC */
+#define CONFIG_ATMEL_NAND_HWECC
+#define CONFIG_ATMEL_NAND_HW_PMECC
+#define CONFIG_PMECC_CAP		4
+#define CONFIG_PMECC_SECTOR_SIZE	512
+#define CONFIG_CMD_NAND_TRIMFFS
+#endif
+
+/* Ethernet Hardware */
+#define CONFIG_MACB
+#define CONFIG_RMII
+#define CONFIG_NET_RETRY_COUNT		20
+#define CONFIG_MACB_SEARCH_PHY
+#define CONFIG_RGMII
+#define CONFIG_CMD_MII
+#define CONFIG_PHYLIB
+#define CONFIG_PHY_MICREL
+#define CONFIG_PHY_MICREL_KSZ9021
+
+/* MMC */
+#undef CONFIG_CMD_MMC
+
+#ifdef CONFIG_CMD_MMC
+#define CONFIG_MMC
+#define CONFIG_GENERIC_MMC
+#define CONFIG_GENERIC_ATMEL_MCI
+#define ATMEL_BASE_MMCI			ATMEL_BASE_MCI0
+#endif
+
+/* USB */
+#define CONFIG_CMD_USB
+
+#ifdef CONFIG_CMD_USB
+#define CONFIG_USB_EHCI
+#define CONFIG_USB_EHCI_ATMEL
+#define CONFIG_SYS_USB_EHCI_MAX_ROOT_PORTS	3
+#define CONFIG_DOS_PARTITION
+#define CONFIG_USB_STORAGE
+#endif
+
+/* USB device */
+#define CONFIG_USB_GADGET
+#define CONFIG_USB_GADGET_DUALSPEED
+#define CONFIG_USB_GADGET_ATMEL_USBA
+#define CONFIG_USB_ETHER
+#define CONFIG_USB_ETH_RNDIS
+#define CONFIG_USBNET_MANUFACTURER      "Atmel SAMA5D3xEK"
+
+#if defined(CONFIG_CMD_USB) || defined(CONFIG_CMD_MMC)
+#define CONFIG_CMD_FAT
+#endif
+
+#define CONFIG_SYS_LOAD_ADDR			0x22000000 /* load address */
+
+#define CONFIG_EXTRA_ENV_SETTINGS \
+	"autoload=no\0" \
+	"autostart=no\0"
+
+
+
+/* bootstrap + u-boot + env in nandflash */
+#define CONFIG_ENV_IS_IN_NAND
+#define CONFIG_ENV_OFFSET		0xA0000
+#define CONFIG_ENV_OFFSET_REDUND	0xC0000
+#define CONFIG_ENV_SIZE			0x20000
+#define CONFIG_BOOTCOMMAND	"" \
+				"nand read 0x22000000 0x000e0000 0x500000; " \
+				"bootm"
+
+
+#define CONFIG_BOOTARGS							\
+	"console=ttyS0,115200 earlyprintk loglevel=4 rw mem=64M "				\
+	"mtdparts=atmel_nand:128k(bootstrap),512k(uboot),"		\
+	"128k(u-boot-env),128k(redund-env),"			\
+	"2560k(kernel-a),2560k(kernel-b),"				\
+	"38912k(rootfs-a),38912k(rootfs-b),"			\
+	"46208K(user),-(logs) "							\
+	"rootfstype=ubifs ubi.mtd=6 root=ubi0:rootfs"
+
+#define CONFIG_BAUDRATE			115200
+
+#define CONFIG_SYS_PROMPT		"U-Boot> "
+#define CONFIG_SYS_CBSIZE		1024
+#define CONFIG_SYS_MAXARGS		16
+#define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + \
+					sizeof(CONFIG_SYS_PROMPT) + 16)
+#define CONFIG_SYS_LONGHELP
+#define CONFIG_CMDLINE_EDITING
+#define CONFIG_AUTO_COMPLETE
+#define CONFIG_SYS_HUSH_PARSER
+
+/* Size of malloc() pool */
+#define CONFIG_SYS_MALLOC_LEN		(2 * 1024 * 1024)
+
+/* SPL */
+#define CONFIG_SPL
+#define CONFIG_SPL_FRAMEWORK
+#define CONFIG_SPL_TEXT_BASE		0x300000
+#define CONFIG_SPL_MAX_SIZE		0x10000
+#define CONFIG_SPL_BSS_START_ADDR	0x20000000
+#define CONFIG_SPL_BSS_MAX_SIZE		0x80000
+#define CONFIG_SYS_SPL_MALLOC_START	0x20080000
+#define CONFIG_SYS_SPL_MALLOC_SIZE	0x80000
+
+#define CONFIG_SPL_LIBCOMMON_SUPPORT
+#define CONFIG_SPL_LIBGENERIC_SUPPORT
+#define CONFIG_SPL_GPIO_SUPPORT
+#define CONFIG_SPL_SERIAL_SUPPORT
+
+#define CONFIG_SPL_BOARD_INIT
+#define CONFIG_SYS_MONITOR_LEN		(512 << 10)
+
+#ifdef CONFIG_SYS_USE_MMC
+#define CONFIG_SPL_LDSCRIPT		arch/arm/cpu/at91-common/u-boot-spl.lds
+#define CONFIG_SPL_MMC_SUPPORT
+#define CONFIG_SYS_U_BOOT_MAX_SIZE_SECTORS	0x400
+#define CONFIG_SYS_MMCSD_RAW_MODE_U_BOOT_SECTOR 0x200
+#define CONFIG_SYS_MMC_SD_FAT_BOOT_PARTITION	1
+#define CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME	"u-boot.img"
+#define CONFIG_SPL_FAT_SUPPORT
+#define CONFIG_SPL_LIBDISK_SUPPORT
+
+#elif CONFIG_SYS_USE_NANDFLASH
+#define CONFIG_SPL_NAND_SUPPORT
+#define CONFIG_SPL_NAND_DRIVERS
+#define CONFIG_SPL_NAND_BASE
+#define CONFIG_SYS_NAND_U_BOOT_OFFS	0x40000
+#define CONFIG_SYS_NAND_5_ADDR_CYCLE
+#define CONFIG_SYS_NAND_PAGE_SIZE	0x800
+#define CONFIG_SYS_NAND_PAGE_COUNT	64
+#define CONFIG_SYS_NAND_OOBSIZE		64
+#define CONFIG_SYS_NAND_BLOCK_SIZE	0x20000
+#define CONFIG_SYS_NAND_BAD_BLOCK_POS	0x0
+#define CONFIG_SPL_GENERATE_ATMEL_PMECC_HEADER
+
+#elif CONFIG_SYS_USE_SERIALFLASH
+#define CONFIG_SPL_SPI_SUPPORT
+#define CONFIG_SPL_SPI_FLASH_SUPPORT
+#define CONFIG_SPL_SPI_LOAD
+#define CONFIG_SPL_SPI_BUS		0
+#define CONFIG_SPL_SPI_CS		0
+#define CONFIG_SYS_SPI_U_BOOT_OFFS	0x8400
+
+#endif
+
+#endif
