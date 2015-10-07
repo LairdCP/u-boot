@@ -186,13 +186,7 @@
 
 
 #define CONFIG_BOOTARGS							\
-	"console=ttyS0,115200 earlyprintk loglevel=4 rw mem=64M "				\
-	"mtdparts=atmel_nand:128k(bootstrap),512k(uboot),"		\
-	"128k(u-boot-env),128k(redund-env),"			\
-	"2560k(kernel-a),2560k(kernel-b),"				\
-	"38912k(rootfs-a),38912k(rootfs-b),"			\
-	"46208K(user),-(logs) "							\
-	"rootfstype=ubifs ubi.mtd=6 root=ubi0:rootfs"
+	"rw rootfstype=ubifs ubi.mtd=6 root=ubi0:rootfs"
 
 #define CONFIG_BAUDRATE			115200
 
