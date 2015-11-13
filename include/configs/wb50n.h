@@ -133,6 +133,8 @@
 #define CONFIG_PHYLIB
 #define CONFIG_PHY_MICREL
 #define CONFIG_PHY_MICREL_KSZ9021
+#define CONFIG_ETHADDR                  c0:ee:40:00:00:00
+#define CONFIG_ENV_OVERWRITE     1
 
 /* MMC */
 #undef CONFIG_CMD_MMC
