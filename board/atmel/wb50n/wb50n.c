@@ -353,35 +353,14 @@ void spi_cs_deactivate(struct spi_slave *slave)
 int board_late_init(void)
 {
 #ifdef CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
-	const char *SAMA5D3_BOARD_EK_NAME = "ek_name";
-	const char *SAMA5D3_MB_REV_ENV_NAME = "mb_rev";
-	const char *SAMA5D3_DM_TYPE_ENV_NAME = "dm_type";
-	char rev_code[2], dm_id;
+	const char *SAMA5D3_BOARD_EK_NAME = "lrd_name";
 	char name[32], *p;
 
 	strcpy(name, get_cpu_name());
 	for (p = name; *p != '\0'; *p = tolower(*p), p++);
-	strcat(name, "ek");
+	strcat(name, "-wb50n");
 	setenv(SAMA5D3_BOARD_EK_NAME, name);
 
-	rev_code[0] = get_mb_rev_code();
-	rev_code[1] = '\0';
-	setenv(SAMA5D3_MB_REV_ENV_NAME, rev_code);
-
-	dm_id = get_dm_board_id();
-	switch (dm_id) {
-	case BOARD_ID_PDA_DM:
-		setenv(SAMA5D3_DM_TYPE_ENV_NAME, "pda4");
-		break;
-	case BOARD_ID_PDA7_DM:
-		setenv(SAMA5D3_DM_TYPE_ENV_NAME, "pda7");
-		break;
-	case BOARD_ID_SAM9x5_DM:
-	case BOARD_ID_SAMA5D3X_DM:
-	default:
-		setenv(SAMA5D3_DM_TYPE_ENV_NAME, "");
-		break;
-	}
 #endif
 
 	return 0;
