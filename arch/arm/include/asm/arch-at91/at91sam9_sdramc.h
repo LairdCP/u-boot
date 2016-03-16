@@ -68,7 +68,7 @@
 #define		AT91_SDRAMC_TRAS	(0xf << 24)		/* Active to Precharge Delay */
 #define		AT91_SDRAMC_TXSR	(0xf << 28)		/* Exit Self Refresh to Active Delay */
 
-#define AT91_SDRAMC_LPR		(ATMEL_BASE_SDRAMC + 0x10)	/* SDRAM Controller Low Power Register */
+#define AT91_SDRAMC_LPR		(ATMEL_BASE_SDRAMC + 0x1C)	/* SDRAM Controller Low Power Register */
 #define		AT91_SDRAMC_LPCB		(3 << 0)	/* Low-power Configurations */
 #define			AT91_SDRAMC_LPCB_DISABLE		0
 #define			AT91_SDRAMC_LPCB_SELF_REFRESH		1

@@ -93,6 +93,7 @@
 #define ATMEL_BASE_PMECC	0xffffe000
 #define ATMEL_BASE_PMERRLOC	0xffffe600
 #define ATMEL_BASE_DDRSDRC	0xffffe800
+#define ATMEL_BASE_SDRAMC	0xffffe800
 #define ATMEL_BASE_SMC		0xffffea00
 #define ATMEL_BASE_DMAC0	0xffffec00
 #define ATMEL_BASE_DMAC1	0xffffee00
