@@ -13,6 +13,7 @@
 #include <stdio_dev.h>
 #include <exports.h>
 #include <environment.h>
+#include <watchdog.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -279,6 +280,7 @@ int fgetc(int file)
 		 * Effectively poll for input wherever it may be available.
 		 */
 		for (;;) {
+			WATCHDOG_RESET();
 			/*
 			 * Upper layer may have already called tstc() so
 			 * check for that first.
