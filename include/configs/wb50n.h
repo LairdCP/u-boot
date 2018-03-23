@@ -46,6 +46,10 @@
 /* general purpose I/O */
 #define CONFIG_AT91_GPIO
 
+/* watchdog */
+#define CONFIG_SAMA5D3_WATCHDOG
+#define CONFIG_CMD_WATCHDOG
+
 /* serial console */
 #define CONFIG_ATMEL_USART
 #define CONFIG_USART_BASE		ATMEL_BASE_DBGU
