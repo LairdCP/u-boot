@@ -66,7 +66,7 @@ void at91_seriald_hw_init(void)
 {
 	at91_pmc_t *pmc = (at91_pmc_t *) ATMEL_BASE_PMC;
 
-	at91_set_a_periph(AT91_PIO_PORTA, 9, 0);	/* DRXD */
+	at91_set_a_periph(AT91_PIO_PORTA, 9,  1);	/* DRXD */
 	at91_set_a_periph(AT91_PIO_PORTA, 10, 1);	/* DTXD */
 
 	writel(1 << ATMEL_ID_SYS, &pmc->pcer);
@@ -77,7 +77,7 @@ void at91_serial0_hw_init(void)
 	at91_pmc_t *pmc = (at91_pmc_t *) ATMEL_BASE_PMC;
 
 	at91_set_a_periph(AT91_PIO_PORTA, 0, 1);	/* TXD */
-	at91_set_a_periph(AT91_PIO_PORTA, 1, 0);	/* RXD */
+	at91_set_a_periph(AT91_PIO_PORTA, 1, 1);	/* RXD */
 
 	writel(1 << ATMEL_ID_USART0, &pmc->pcer);
 }
@@ -87,7 +87,7 @@ void at91_serial1_hw_init(void)
 	at91_pmc_t *pmc = (at91_pmc_t *) ATMEL_BASE_PMC;
 
 	at91_set_a_periph(AT91_PIO_PORTA, 5, 1);	/* TXD */
-	at91_set_a_periph(AT91_PIO_PORTA, 6, 0);	/* RXD */
+	at91_set_a_periph(AT91_PIO_PORTA, 6, 1);	/* RXD */
 
 	writel(1 << ATMEL_ID_USART1, &pmc->pcer);
 }
@@ -97,7 +97,7 @@ void at91_serial2_hw_init(void)
 	at91_pmc_t *pmc = (at91_pmc_t *) ATMEL_BASE_PMC;
 
 	at91_set_a_periph(AT91_PIO_PORTA, 7, 1);	/* TXD */
-	at91_set_a_periph(AT91_PIO_PORTA, 8, 0);	/* RXD */
+	at91_set_a_periph(AT91_PIO_PORTA, 8, 1);	/* RXD */
 
 	writel(1 << ATMEL_ID_USART2, &pmc->pcer);
 }

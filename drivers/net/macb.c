@@ -203,33 +203,35 @@ int macb_miiphy_write(const char *devname, u8 phy_adr, u8 reg, u16 value)
 static inline void macb_invalidate_ring_desc(struct macb_device *macb, bool rx)
 {
 	if (rx)
-		invalidate_dcache_range(macb->rx_ring_dma, macb->rx_ring_dma +
-			MACB_RX_DMA_DESC_SIZE);
+		invalidate_dcache_range(macb->rx_ring_dma,
+			ALIGN(macb->rx_ring_dma + MACB_RX_DMA_DESC_SIZE,
+			      PKTALIGN));
 	else
-		invalidate_dcache_range(macb->tx_ring_dma, macb->tx_ring_dma +
-			MACB_TX_DMA_DESC_SIZE);
+		invalidate_dcache_range(macb->tx_ring_dma,
+			ALIGN(macb->tx_ring_dma + MACB_TX_DMA_DESC_SIZE,
+			      PKTALIGN));
 }
 
 static inline void macb_flush_ring_desc(struct macb_device *macb, bool rx)
 {
 	if (rx)
 		flush_dcache_range(macb->rx_ring_dma, macb->rx_ring_dma +
-			MACB_RX_DMA_DESC_SIZE);
+				   ALIGN(MACB_RX_DMA_DESC_SIZE, PKTALIGN));
 	else
 		flush_dcache_range(macb->tx_ring_dma, macb->tx_ring_dma +
-			MACB_TX_DMA_DESC_SIZE);
+				   ALIGN(MACB_TX_DMA_DESC_SIZE, PKTALIGN));
 }
 
 static inline void macb_flush_rx_buffer(struct macb_device *macb)
 {
 	flush_dcache_range(macb->rx_buffer_dma, macb->rx_buffer_dma +
-				MACB_RX_BUFFER_SIZE);
+			   ALIGN(MACB_RX_BUFFER_SIZE, PKTALIGN));
 }
 
 static inline void macb_invalidate_rx_buffer(struct macb_device *macb)
 {
 	invalidate_dcache_range(macb->rx_buffer_dma, macb->rx_buffer_dma +
-				MACB_RX_BUFFER_SIZE);
+				ALIGN(MACB_RX_BUFFER_SIZE, PKTALIGN));
 }
 
 #if defined(CONFIG_CMD_NET)
@@ -257,7 +259,7 @@ static int macb_send(struct eth_device *netdev, void *packet, int length)
 	barrier();
 	macb_flush_ring_desc(macb, TX);
 	/* Do we need check paddr and length is dcache line aligned? */
-	flush_dcache_range(paddr, paddr + length);
+	flush_dcache_range(paddr, paddr + ALIGN(length, ARCH_DMA_MINALIGN));
 	macb_writel(macb, NCR, MACB_BIT(TE) | MACB_BIT(RE) | MACB_BIT(TSTART));
 
 	/*
