@@ -81,18 +81,18 @@ void sama5d3xek_nand_hw_init(void)
 
 	at91_periph_clk_enable(ATMEL_ID_SMC);
 
-	/* Configure SMC CS3 for NAND/SmartMedia */
-	writel(AT91_SMC_SETUP_NWE(2) | AT91_SMC_SETUP_NCS_WR(1) |
-	       AT91_SMC_SETUP_NRD(2) | AT91_SMC_SETUP_NCS_RD(1),
+	/* Configure SMC CS3 for NAND to ONFI Timing Mode 3 */
+	writel(AT91_SMC_SETUP_NWE(1) | AT91_SMC_SETUP_NCS_WR(0) |
+	       AT91_SMC_SETUP_NRD(0) | AT91_SMC_SETUP_NCS_RD(0),
 	       &smc->cs[3].setup);
-	writel(AT91_SMC_PULSE_NWE(3) | AT91_SMC_PULSE_NCS_WR(5) |
-	       AT91_SMC_PULSE_NRD(3) | AT91_SMC_PULSE_NCS_RD(5),
+	writel(AT91_SMC_PULSE_NWE(3) | AT91_SMC_PULSE_NCS_WR(6) |
+	       AT91_SMC_PULSE_NRD(3) | AT91_SMC_PULSE_NCS_RD(6),
 	       &smc->cs[3].pulse);
-	writel(AT91_SMC_CYCLE_NWE(8) | AT91_SMC_CYCLE_NRD(8),
+	writel(AT91_SMC_CYCLE_NWE(6) | AT91_SMC_CYCLE_NRD(6),
 	       &smc->cs[3].cycle);
-	writel(AT91_SMC_TIMINGS_TCLR(3) | AT91_SMC_TIMINGS_TADL(10) |
-	       AT91_SMC_TIMINGS_TAR(3)  | AT91_SMC_TIMINGS_TRR(4)   |
-	       AT91_SMC_TIMINGS_TWB(5)  | AT91_SMC_TIMINGS_RBNSEL(3)|
+	writel(AT91_SMC_TIMINGS_TCLR(2) | AT91_SMC_TIMINGS_TADL(15) |
+	       AT91_SMC_TIMINGS_TAR(2)  | AT91_SMC_TIMINGS_TRR(3)   |
+	       AT91_SMC_TIMINGS_TWB(15)  | AT91_SMC_TIMINGS_RBNSEL(3)|
 	       AT91_SMC_TIMINGS_NFSEL(1), &smc->cs[3].timings);
 	writel(AT91_SMC_MODE_RM_NRD | AT91_SMC_MODE_WM_NWE |
 	       AT91_SMC_MODE_EXNW_DISABLE |
@@ -101,7 +101,8 @@ void sama5d3xek_nand_hw_init(void)
 #else /* CONFIG_SYS_NAND_DBW_8 */
 	       AT91_SMC_MODE_DBW_8 |
 #endif
-	       AT91_SMC_MODE_TDF_CYCLE(3),
+	       AT91_SMC_MODE_TDF |
+	       AT91_SMC_MODE_TDF_CYCLE(12),
 	       &smc->cs[3].mode);
 
 	/* Disable Flash Write Protect Line */
@@ -262,16 +263,6 @@ int dram_init(void)
 
 int board_phy_config(struct phy_device *phydev)
 {
-	/* rx data delay */
-	ksz9021_phy_extended_write(phydev,
-				   MII_KSZ9021_EXT_RGMII_RX_DATA_SKEW, 0x2222);
-	/* tx data delay */
-	ksz9021_phy_extended_write(phydev,
-				   MII_KSZ9021_EXT_RGMII_TX_DATA_SKEW, 0x2222);
-	/* rx/tx clock delay */
-	ksz9021_phy_extended_write(phydev,
-				   MII_KSZ9021_EXT_RGMII_CLOCK_SKEW, 0xf2f4);
-
 	return 0;
 }
 
