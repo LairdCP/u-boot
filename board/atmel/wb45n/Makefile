@@ -7,7 +7,7 @@
 # Lead Tech Design <www.leadtechdesign.com>
 #
 # (C) Copyright 2015
-# Laird <www.lairdtech.com>
+# Laird <www.lairdconnect.com>
 #
 # SPDX-License-Identifier:	GPL-2.0+
 #

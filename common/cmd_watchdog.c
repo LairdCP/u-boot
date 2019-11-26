@@ -2,7 +2,7 @@
  * Watchdog driver command for Atmel SAMA5D3x processors series.
  *
  * (C) Copyright 2018
- * Laird <ews-support@lairdtech.com>
+ * Laird <support@lairdconnect.com>
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
