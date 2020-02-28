@@ -286,20 +286,6 @@ void autoboot_command(const char *s)
 		int prev = disable_ctrlc(1);	/* disable Control C checking */
 #endif
 
-
-/*
- * Initialize  Watchdog Timer Driver (sama5d3_wdt.c)
- *
- * After autoboot times out, watchdog timer
- * enables or disables based on the env variables
- * set for the watchdog driver
- *
- */
-#if defined (CONFIG_SAMA5D3_WATCHDOG) && defined(CONFIG_CMD_WATCHDOG)
-#define CONFIG_HW_WATCHDOG
-#include<watchdog.h>
-        hw_watchdog_init();
-#endif
 		run_command_list(s, -1, 0);
 
 #if defined(CONFIG_AUTOBOOT_KEYED) && !defined(CONFIG_AUTOBOOT_KEYED_CTRLC)

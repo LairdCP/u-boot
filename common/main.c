@@ -11,7 +11,6 @@
 #include <autoboot.h>
 #include <cli.h>
 #include <version.h>
-#include <asm/io.h> /*writel */
 
 DECLARE_GLOBAL_DATA_PTR;
 
@@ -84,19 +83,6 @@ void main_loop(void)
 		cli_secure_boot_cmd(s);
 
 	autoboot_command(s);
-
-/* Disable Watchdog Timer before UBoot console (sama5d3_wdt.c)
- *
- * To avoid watchdog reset in UBoot console
- * watchdog disabled before console starts
- *
- */
-#if defined (CONFIG_SAMA5D3_WATCHDOG) && defined(CONFIG_CMD_WATCHDOG)
-#include <asm/arch/at91_wdt.h>
-    at91_wdt_t *wd = (at91_wdt_t *) ATMEL_BASE_WDT;
-    writel(AT91_WDT_MR_WDDIS,&wd->mr);
-    printf("Uboot: Watchdog disabled\n");
-#endif
 
 	cli_loop();
 }
