@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Atmel Corporation
+ * Copyright (C) 2012-2020 Laird Connectivity
  *
  * SPDX-License-Identifier:	GPL-2.0+
  */
@@ -15,9 +15,7 @@
 #include <asm/arch/clk.h>
 #include <atmel_hlcdc.h>
 #include <atmel_mci.h>
-#ifdef CONFIG_MACB
 #include <net.h>
-#endif
 #include <netdev.h>
 
 DECLARE_GLOBAL_DATA_PTR;
@@ -27,7 +25,7 @@ DECLARE_GLOBAL_DATA_PTR;
  * Miscelaneous platform dependent initialisations
  */
 #ifdef CONFIG_CMD_NAND
-static void at91sam9x5ek_nand_hw_init(void)
+static void wb45n_nand_hw_init(void)
 {
 	struct at91_smc *smc = (struct at91_smc *)ATMEL_BASE_SMC;
 	struct at91_matrix *matrix = (struct at91_matrix *)ATMEL_BASE_MATRIX;
@@ -114,21 +112,18 @@ int board_early_init_f(void)
 
 int board_init(void)
 {
-	/* arch number of AT91SAM9X5EK-Board */
-	gd->bd->bi_arch_number = MACH_TYPE_AT91SAM9X5EK;
-
-	/* adress of boot parameters */
+	/* address of boot parameters */
 	gd->bd->bi_boot_params = CONFIG_SYS_SDRAM_BASE + 0x100;
 
 #ifdef CONFIG_CMD_NAND
-	at91sam9x5ek_nand_hw_init();
+	wb45n_nand_hw_init();
 #endif
 
 #ifdef CONFIG_MACB
 	at91_macb_hw_init();
 #endif
 
-#if defined(CONFIG_USB_OHCI_NEW) || defined(CONFIG_USB_EHCI)
+#if defined(CONFIG_USB_OHCI_NEW)
 	at91_uhp_hw_init();
 #endif
 
