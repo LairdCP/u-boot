@@ -45,11 +45,11 @@ static void wb45n_nand_hw_init(void)
 	writel(csa, &matrix->ebicsa);
 
 	/* Configure SMC CS3 for NAND/SmartMedia */
-	writel(AT91_SMC_SETUP_NWE(1) | AT91_SMC_SETUP_NCS_WR(0) |
-		AT91_SMC_SETUP_NRD(0) | AT91_SMC_SETUP_NCS_RD(0),
+	writel(AT91_SMC_SETUP_NWE(2) | AT91_SMC_SETUP_NCS_WR(0) |
+		AT91_SMC_SETUP_NRD(2) | AT91_SMC_SETUP_NCS_RD(0),
 		&smc->cs[3].setup);
-	writel(AT91_SMC_PULSE_NWE(3) | AT91_SMC_PULSE_NCS_WR(6) |
-		AT91_SMC_PULSE_NRD(3) | AT91_SMC_PULSE_NCS_RD(6),
+	writel(AT91_SMC_PULSE_NWE(2) | AT91_SMC_PULSE_NCS_WR(6) |
+		AT91_SMC_PULSE_NRD(2) | AT91_SMC_PULSE_NCS_RD(6),
 		&smc->cs[3].pulse);
 	writel(AT91_SMC_CYCLE_NWE(6) | AT91_SMC_CYCLE_NRD(6),
 		&smc->cs[3].cycle);
